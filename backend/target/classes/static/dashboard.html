@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Fremont Fades</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              fontFamily: {
+                sans: ['Poppins', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              },
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-900 antialiased font-sans">
+
+<!-- Navigation Bar -->
+<nav class="w-full bg-white shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <!-- Logo -->
+            <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.location.href = '/';">
+                <span class="text-xl font-black tracking-tighter">FREMONT FADES</span>
+            </div>
+
+            <!-- Auth Buttons -->
+            <div class="flex items-center space-x-4">
+                <a href="/dashboard.html" class="text-sm font-semibold text-gray-600 hover:text-black transition">Dashboard</a>
+                <a href="#" class="text-sm font-semibold text-gray-600 hover:text-black transition">Fights</a>
+                <a href="/challenges.html" class="text-sm font-semibold text-gray-600 hover:text-black transition">Challenges</a>
+                <a href="#" class="text-sm font-semibold text-gray-600 hover:text-black transition">Credits</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <main class="w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-2">
+                <h2 class="text-3xl font-black tracking-tighter mb-4">Upcoming Fights</h2>
+                <div class="bg-white rounded-lg shadow-sm p-4">
+                    <p class="text-center text-gray-500">No upcoming fights scheduled.</p>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-3xl font-black tracking-tighter mb-4">Your Stats</h2>
+                <div class="bg-white rounded-lg shadow-sm p-4">
+                    <p><strong>Credits:</strong> <span id="user-credits">100.00</span></p>
+                    <a href="/add-credits.html" class="w-full mt-4 bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800 transition text-center block">Add Credits</a>
+                </div>
+                <h2 class="text-3xl font-black tracking-tighter mt-8 mb-4">Available Fighters</h2>
+                <div id="fighters-list" class="bg-white rounded-lg shadow-sm p-4 max-h-96 overflow-y-auto">
+                    <!-- Fighters will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Mock user data, replace with actual data from your backend
+        const user = { username: 'Current_User' };
+        document.getElementById('user-info').textContent = `Welcome, ${user.username}`;
+
+        fetch('/api/users/fighters')
+            .then(response => response.json())
+            .then(fighters => {
+                const fightersList = document.getElementById('fighters-list');
+                if (fighters.length > 0) {
+                    fightersList.innerHTML = fighters.map(fighter => `
+                        <div class="p-2 border-b border-gray-800">
+                            <p class="font-bold">${fighter.username}</p>
+                            <p class="text-sm text-gray-400">W/L: ${fighter.wins}/${fighter.losses} | ${fighter.weight}lbs | ${fighter.height}cm</p>
+                        </div>
+                    `).join('');
+                } else {
+                    fightersList.innerHTML = '<p class="text-center">No fighters available.</p>';
+                }
+            });
+
+        fetch('/api/fights')
+            .then(response => response.json())
+            .then(fights => {
+                const fightsContainer = document.querySelector('.md\\:col-span-2 .bg-white');
+                if (fights.length > 0) {
+                    fightsContainer.innerHTML = fights.map((fight, index) => `
+                        <div class="p-4 border-b border-gray-800">
+                            <h3 class="text-xl font-bold">${fight.fighter1.username} vs ${fight.fighter2.username}</h3>
+                            <p class="text-gray-400">${new Date(fight.fightDateTime).toLocaleString()} at ${fight.location}</p>
+                            <p>Tickets Available: ${fight.availableTickets}</p>
+                            <button onclick="bookTicket(${index})" class="mt-2 bg-blue-500 text-white font-bold py-1 px-3 rounded hover:bg-blue-600 transition">Book Ticket</button>
+                        </div>
+                    `).join('');
+                } else {
+                    fightsContainer.innerHTML = '<p class="text-center">No upcoming fights scheduled.</p>';
+                }
+            });
+    });
+
+    function bookTicket(fightIndex) {
+        fetch(`/api/fights/${fightIndex}/book`, { method: 'POST' })
+            .then(response => {
+                if (response.ok) {
+                    alert('Ticket booked successfully!');
+                    location.reload();
+                } else {
+                    alert('Failed to book ticket.');
+                }
+            });
+    }
+</script>
+</body>
+</html>

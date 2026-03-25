@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fremont Fades</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              fontFamily: {
+                sans: ['Poppins', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              },
+            },
+          },
+        }
+    </script>
+
+    <style>
+        /* Hide number input arrows */
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
+        .fighter-fields.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen text-gray-900 antialiased font-sans">
+
+<!-- Navigation Bar -->
+<nav class="w-full bg-white shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <!-- Logo -->
+            <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.location.href='/'">
+                <span class="text-xl font-black tracking-tighter">FREMONT FADES</span>
+            </div>
+            
+            <!-- Auth Buttons -->
+            <div class="flex items-center space-x-4">
+                <button id="nav-login-btn" class="text-sm font-semibold text-gray-600 hover:text-black transition">
+                    Log In
+                </button>
+                <button id="nav-register-btn" class="text-sm font-semibold bg-black text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition shadow-sm">
+                    Sign Up
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Landing Page Hero Section -->
+<main class="w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+        <div class="text-center mb-16">
+            <h1 class="text-5xl md:text-7xl font-black tracking-tighter mb-6 text-gray-900">
+                A platform where people<br/>
+                compete, watch, gamble, and<br/>
+                get paid. On your own terms.
+            </h1>
+            <p class="mt-4 text-xl text-gray-500 max-w-2xl mx-auto mb-10 font-medium">
+                Join the private network for Fremont Fades. Step into the arena.
+            </p>
+            <button onclick="document.getElementById('nav-register-btn').click()" class="bg-black text-white text-lg font-bold px-8 py-4 rounded-xl hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                Join the Network
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Compete Box -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-200 hover:shadow-xl hover:border-gray-300 transition-all duration-300 flex flex-col items-center text-center group">
+                <h2 class="text-2xl font-black tracking-tight mb-4 text-gray-900 group-hover:scale-105 transition-transform">COMPETE</h2>
+                <div class="w-16 h-1.5 bg-black rounded-full mb-6"></div>
+                <p class="text-gray-600 leading-relaxed font-medium">Build a profile. Find an opponent by weight class and skill. Step up.</p>
+            </div>
+
+            <!-- Spectate Box -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-200 hover:shadow-xl hover:border-gray-300 transition-all duration-300 flex flex-col items-center text-center group">
+                <h2 class="text-2xl font-black tracking-tight mb-4 text-gray-900 group-hover:scale-105 transition-transform">SPECTATE</h2>
+                <div class="w-16 h-1.5 bg-black rounded-full mb-6"></div>
+                <p class="text-gray-600 leading-relaxed font-medium">Buy tickets, bet on outcomes, watch it in person or live.</p>
+            </div>
+
+            <!-- Profit Box -->
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-200 hover:shadow-xl hover:border-gray-300 transition-all duration-300 flex flex-col items-center text-center group">
+                <h2 class="text-2xl font-black tracking-tight mb-4 text-gray-900 group-hover:scale-105 transition-transform">PROFIT</h2>
+                <div class="w-16 h-1.5 bg-black rounded-full mb-6"></div>
+                <p class="text-gray-600 leading-relaxed font-medium">Fighters earn 50% of ticket revenue. Redeem credits for real money. Gamble credits on fighters.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<!-- Authentication Modal Backdrop (Hidden by Default) -->
+<div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
+    
+    <!-- Close Button (Absolute to Modal Backdrop) -->
+    <button id="close-modal-btn" class="absolute top-6 right-6 text-white hover:text-gray-300 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    </button>
+
+    <!-- Modal Content Container -->
+    <div class="w-full max-w-md relative" id="register-form-container">
+
+    <div class="bg-white p-8 rounded-2xl shadow-lg">
+
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-black tracking-tighter text-gray-800">
+                FREMONT FADES
+            </h1>
+            <p class="text-gray-500 text-sm uppercase tracking-widest mt-1">
+                Private Network
+            </p>
+        </header>
+
+        <form class="space-y-6" id="register-form">
+            <div>
+                <label class="text-sm font-medium text-gray-600 tracking-wide">Role</label>
+                <div class="mt-2 flex gap-4">
+                    <label class="flex items-center">
+                        <input type="radio" name="role" value="spectator" checked class="form-radio h-4 w-4 text-black focus:ring-black">
+                        <span class="ml-2 text-sm text-gray-700">Spectator</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="role" value="fighter" class="form-radio h-4 w-4 text-black focus:ring-black">
+                        <span class="ml-2 text-sm text-gray-700">Fighter</span>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <label for="username" class="text-sm font-medium text-gray-600 tracking-wide">
+                    Username
+                </label>
+                <input
+                        id="username"
+                        type="text"
+                        class="w-full bg-gray-50 border border-gray-300 px-4 py-2.5 mt-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+            </div>
+            <div>
+                <label for="password" class="text-sm font-medium text-gray-600 tracking-wide">
+                    Password
+                </label>
+                <input
+                        id="password"
+                        type="password"
+                        class="w-full bg-gray-50 border border-gray-300 px-4 py-2.5 mt-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 fighter-fields hidden">
+                <div>
+                    <label for="age" class="text-sm font-medium text-gray-600 tracking-wide">
+                        Age
+                    </label>
+                    <input id="age" type="number" placeholder="18" class="w-full bg-gray-50 border border-gray-300 px-4 py-2.5 mt-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="weight" class="text-sm font-medium text-gray-600 tracking-wide">
+                        Weight
+                    </label>
+                    <input id="weight" type="number" placeholder="lbs" class="w-full bg-gray-50 border border-gray-300 px-4 py-2.5 mt-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                </div>
+
+                <div>
+                    <label for="height" class="text-sm font-medium text-gray-600 tracking-wide">
+                        Height
+                    </label>
+                    <input id="height" type="number" placeholder="cm" class="w-full bg-gray-50 border border-gray-300 px-4 py-2.5 mt-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                </div>
+            </div>
+
+            <div class="pt-2 flex gap-4">
+                <button
+                        type="submit"
+                        class="w-full bg-black text-white font-semibold py-3 rounded-lg shadow-md hover:bg-gray-800 transition-colors duration-300">
+                    START
+                </button>
+            </div>
+
+
+            <div class="text-center">
+              <span class="text-xs text-gray-400 italic">
+                +1,000 CR bonus on sign-up
+              </span>
+            </div>
+        </form>
+        <div class="mt-6 text-center">
+            <a href="#" id="show-login" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                Already have an account? Login
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="w-full max-w-md px-4 hidden" id="login-form-container">
+
+    <div class="bg-white p-8 rounded-2xl shadow-lg">
+
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-black tracking-tighter text-gray-800">
+                LOGIN
+            </h1>
+            <p class="text-gray-500 text-sm uppercase tracking-widest mt-1">
+                Private Network
+            </p>
+        </header>
+
+        <form class="space-y-6" id="login-form">
+
+            <div>
+                <label for="login-username" class="text-sm font-medium text-gray-600 tracking-wide">
+                    Username
+                </label>
+                <input
+                        id="login-username"
+                        type="text"
+                        class="w-full bg-gray-50 border border-gray-300 px-4 py-2.5 mt-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+            </div>
+            <div>
+                <label for="login-password" class="text-sm font-medium text-gray-600 tracking-wide">
+                    Password
+                </label>
+                <input
+                        id="login-password"
+                        type="password"
+                        class="w-full bg-gray-50 border border-gray-300 px-4 py-2.5 mt-2 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+            </div>
+
+            <div class="pt-2 flex gap-4">
+                <button
+                        type="submit"
+                        class="w-full bg-black text-white font-semibold py-3 rounded-lg shadow-md hover:bg-gray-800 transition-colors duration-300">
+                    LOGIN
+                </button>
+            </div>
+        </form>
+        <div class="mt-6 text-center">
+            <a href="#" id="show-register" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                Don't have an account? Sign Up
+            </a>
+        </div>
+    </div>
+</div>
+
+</div> <!-- End Auth Modal -->
+
+
+<script>
+    document.querySelectorAll('input[name="role"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const fighterFields = document.querySelector('.fighter-fields');
+            if (e.target.value === 'fighter') {
+                fighterFields.classList.remove('hidden');
+            } else {
+                fighterFields.classList.add('hidden');
+            }
+        });
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const role = document.querySelector('input[name="role"]:checked').value;
+
+        const user = { username, password, role };
+
+        if (role === 'fighter') {
+            user.age = document.getElementById('age').value;
+            user.weight = document.getElementById('weight').value;
+            user.height = document.getElementById('height').value;
+        }
+
+        let response;
+        try {
+            response = await fetch('/api/users/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user)
+            });
+        } catch (networkErr) {
+            alert('Network error: could not reach the server.\n' + networkErr.message);
+            return;
+        }
+
+        if (response.ok) {
+            window.location.href = '/dashboard.html';
+        } else if (response.status === 409) {
+            alert('Username already exists.');
+        } else {
+            const errorText = await response.text();
+            alert(`Registration failed (${response.status} ${response.statusText}):\n${errorText || '(no details from server)'}`);
+        }
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+
+        const loginRequest = { username, password };
+
+        const response = await fetch('/api/users/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(loginRequest)
+        });
+
+        if (response.ok) {
+            window.location.href = '/dashboard.html';
+        } else {
+            alert('Invalid username or password.');
+        }
+    });
+
+    document.getElementById('show-login').addEventListener('click', (e) => {
+        e.preventDefault();
+        showLoginForm();
+    });
+
+    document.getElementById('show-register').addEventListener('click', (e) => {
+        e.preventDefault();
+        showRegisterForm();
+    });
+
+    // --- Modal Logic ---
+    const authModal = document.getElementById('auth-modal');
+    const registerFormContainer = document.getElementById('register-form-container');
+    const loginFormContainer = document.getElementById('login-form-container');
+
+    function openModal() {
+        authModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function closeModal() {
+        authModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    function showLoginForm() {
+        registerFormContainer.classList.add('hidden');
+        loginFormContainer.classList.remove('hidden');
+    }
+
+    function showRegisterForm() {
+        loginFormContainer.classList.add('hidden');
+        registerFormContainer.classList.remove('hidden');
+    }
+
+    // Nav Button Listeners
+    document.getElementById('nav-login-btn').addEventListener('click', () => {
+        showLoginForm();
+        openModal();
+    });
+
+    document.getElementById('nav-register-btn').addEventListener('click', () => {
+        showRegisterForm();
+        openModal();
+    });
+
+    // Close Button Listeners
+    document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+    
+    // Close on clicking outside the modal content
+    authModal.addEventListener('click', (e) => {
+        if (e.target === authModal) {
+            closeModal();
+        }
+    });
+</script>
+</body>
+</html>
