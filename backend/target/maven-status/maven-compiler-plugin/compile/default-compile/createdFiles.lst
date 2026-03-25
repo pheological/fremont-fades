@@ -1,9 +1,0 @@
-com/fremontfades/backend/server/BetHandler.class
-com/fremontfades/backend/model/Fighter.class
-com/fremontfades/backend/model/User.class
-com/fremontfades/backend/model/Fight.class
-com/fremontfades/backend/server/FightHandler.class
-com/fremontfades/backend/server/UserHandler.class
-com/fremontfades/backend/model/Bet.class
-com/fremontfades/backend/Main.class
-com/fremontfades/backend/server/StaticFileHandler.class
