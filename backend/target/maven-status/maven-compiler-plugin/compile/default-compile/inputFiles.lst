@@ -1,0 +1,10 @@
+/Users/vk/IdeaProjects/Fremont Fades/backend/src/main/java/com/fremontfades/backend/Main.java
+/Users/vk/IdeaProjects/Fremont Fades/backend/src/main/java/com/fremontfades/backend/model/Bet.java
+/Users/vk/IdeaProjects/Fremont Fades/backend/src/main/java/com/fremontfades/backend/model/Challenge.java
+/Users/vk/IdeaProjects/Fremont Fades/backend/src/main/java/com/fremontfades/backend/model/Fight.java
+/Users/vk/IdeaProjects/Fremont Fades/backend/src/main/java/com/fremontfades/backend/model/Fighter.java
+/Users/vk/IdeaProjects/Fremont Fades/backend/src/main/java/com/fremontfades/backend/model/User.java
+/Users/vk/IdeaProjects/Fremont Fades/backend/src/main/java/com/fremontfades/backend/server/BetHandler.java
+/Users/vk/IdeaProjects/Fremont Fades/backend/src/main/java/com/fremontfades/backend/server/FightHandler.java
+/Users/vk/IdeaProjects/Fremont Fades/backend/src/main/java/com/fremontfades/backend/server/StaticFileHandler.java
+/Users/vk/IdeaProjects/Fremont Fades/backend/src/main/java/com/fremontfades/backend/server/UserHandler.java
